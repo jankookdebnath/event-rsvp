@@ -1,0 +1,16 @@
+# secrets
+.env
+*.pem
+
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+.terraform.lock.hcl.bak
+
+# python
+__pycache__/
+.venv/
+.pytest_cache/
+*.db

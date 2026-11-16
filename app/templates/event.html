@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }} · Event RSVP{% endblock %}
+{% block content %}
+<h1>{{ event.title }}</h1>
+<p class="meta">{{ event.event_date.replace('T', ' ') }}{% if event.location %} · {{ event.location }}{% endif %}</p>
+{% if event.description %}<p class="desc">{{ event.description }}</p>{% endif %}
+
+<form method="post" action="{{ url_for('rsvp', event_id=event.id) }}" class="panel rsvp-form">
+  <h2>Will you come?</h2>
+  <input name="name" placeholder="Your name" required maxlength="60">
+  <div class="choices">
+    <label><input type="radio" name="status" value="yes" required> Yes</label>
+    <label><input type="radio" name="status" value="maybe"> Maybe</label>
+    <label><input type="radio" name="status" value="no"> No</label>
+  </div>
+  <button class="btn" type="submit">Send RSVP</button>
+  <p class="hint">Answering again with the same name updates your RSVP.</p>
+</form>
+
+<div class="columns">
+  {% for s in statuses %}
+  <section class="panel">
+    <h3><span class="pill {{ s }}">{{ {'yes': 'Going', 'maybe': 'Maybe', 'no': "Can't come"}[s] }}</span> {{ grouped[s]|length }}</h3>
+    <ul>
+      {% for r in grouped[s] %}
+        <li>{{ r.name }}
+          <form method="post" action="{{ url_for('delete_rsvp', event_id=event.id, rsvp_id=r.id) }}" class="inline">
+            <button class="link" title="Remove">×</button>
+          </form>
+        </li>
+      {% else %}
+        <li class="empty">Nobody yet</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+</div>
+
+<form method="post" action="{{ url_for('delete_event', event_id=event.id) }}" class="danger-zone">
+  <button class="btn danger" type="submit">Delete event</button>
+</form>
+{% endblock %}
