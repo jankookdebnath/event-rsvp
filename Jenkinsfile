@@ -35,7 +35,7 @@ pipeline {
         }
 
         stage('Unit tests') {
-            when { expression { params.ACTION == 'deploy' } }
+            when { expression { params.ACTION != 'destroy' } }
             steps {
                 dir('app') {
                     sh '''
@@ -58,7 +58,7 @@ pipeline {
         }
 
         stage('Terraform plan') {
-            when { expression { params.ACTION == 'deploy' } }
+            when { expression { params.ACTION != 'destroy' } }
             steps {
                 dir('terraform') {
                     sh '''
@@ -71,7 +71,7 @@ pipeline {
         }
 
         stage('Provision infrastructure') {
-            when { expression { params.ACTION == 'deploy' } }
+            when { expression { params.ACTION != 'destroy' } }
             steps {
                 dir('terraform') {
                     sh 'terraform apply -input=false -auto-approve tfplan'
@@ -83,7 +83,7 @@ pipeline {
         }
 
         stage('Wait for app to go live') {
-            when { expression { params.ACTION == 'deploy' } }
+            when { expression { params.ACTION != 'destroy' } }
             steps {
                 // First boot installs Docker and builds the image, which takes a few minutes.
                 sh '''
@@ -111,7 +111,7 @@ pipeline {
     post {
         success {
             script {
-                if (params.ACTION == 'deploy') {
+                if (params.ACTION != 'destroy') {
                     currentBuild.description = "Live: ${env.APP_URL}"
                     echo "SUCCESS - open ${env.APP_URL}"
                 } else {
