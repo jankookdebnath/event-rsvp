@@ -44,7 +44,7 @@ jenkins/             Jenkins image (Terraform + plugins), casc.yaml, docker-comp
 
 1. Create an IAM user with an access key that can manage EC2 (e.g. `AmazonEC2FullAccess`).
 2. `cd jenkins`, copy `.env.example` to `.env`, fill in the AWS keys and the GitHub repo URL.
-3. `docker compose up -d --build`, then open http://localhost:8080 and log in with the admin from `.env`.
+3. `docker compose up -d --build`, then open http://localhost:8090 and log in with the admin from `.env`.
 4. Open the **event-rsvp-deploy** job and click **Build Now** (first run: *Build with Parameters* → `deploy`).
 
 ## Run the app locally

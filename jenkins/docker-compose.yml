@@ -3,7 +3,7 @@ services:
     build: .
     container_name: event-rsvp-jenkins
     ports:
-      - "8080:8080"
+      - "8090:8080"
     env_file: .env
     volumes:
       - jenkins_home:/var/jenkins_home
